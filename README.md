@@ -81,7 +81,27 @@ This allows you to utilize the MCP server from anywhere, without installing anyt
 
 ## :gear: Usage
 
-TODO
+For all examples below, replace `context7.liam.sh` with your own MCP server URL, if you're running your own instance.
+
+Configured endpoints:
+
+- `http://context7.liam.sh/mcp` - HTTP `streamable` endpoint.
+- `http://context7.liam.sh/sse` (& `/message`) - SSE endpoint (**NOTE**: SSE is considered deprecated in the MCP spec).
+
+Other than swapping out the `mcpServer` block (or similar, depending on your client), usage should match that of the
+[official Context7 documentation](https://github.com/upstash/context7#-with-context7)
+
+### VSCode, Cursor, etc
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "url": "http://context7.liam.sh/mcp"
+    }
+  }
+}
+```
 
 ## :books: References
 
