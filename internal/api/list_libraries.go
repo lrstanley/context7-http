@@ -6,6 +6,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"slices"
@@ -145,5 +146,5 @@ func (c *Client) GetLibrary(ctx context.Context, resourceURI string) (library *L
 			return library, nil
 		}
 	}
-	return nil, fmt.Errorf("library not found")
+	return nil, errors.New("library not found")
 }

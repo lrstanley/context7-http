@@ -6,13 +6,13 @@ package main
 
 import (
 	"context"
+	"time"
 
 	"github.com/apex/log"
+	"github.com/lrstanley/chix"
 	"github.com/lrstanley/clix"
 	"github.com/lrstanley/context7-http/internal/api"
 	"github.com/lrstanley/context7-http/internal/mcpserver"
-	"github.com/lrstanley/context7-http/internal/session"
-	"github.com/mark3labs/mcp-go/server"
 )
 
 var (
@@ -29,12 +29,15 @@ var (
 		},
 	}
 
+	srv    *mcpserver.Server
 	client *api.Client
 )
 
 type Flags struct {
-	BindAddr string `long:"bind-addr" env:"BIND_ADDR" default:":8080"`
-	BaseURL  string `long:"base-url" env:"BASE_URL" default:"http://localhost:8080"`
+	BindAddr          string        `long:"bind-addr"          env:"BIND_ADDR"          default:":8080"`
+	BaseURL           string        `long:"base-url"           env:"BASE_URL"           default:"http://localhost:8080"`
+	TrustedProxies    []string      `long:"trusted-proxies"    env:"TRUSTED_PROXIES"    description:"CIDR ranges that we trust the X-Forwarded-For header from"`
+	HeartbeatInterval time.Duration `long:"heartbeat-interval" env:"HEARTBEAT_INTERVAL"`
 }
 
 func main() {
@@ -50,21 +53,13 @@ func main() {
 		log.WithError(err).Fatal("failed to initialize api client")
 	}
 
-	srv, err := mcpserver.New(ctx, version, client)
+	srv, err = mcpserver.New(ctx, version, client)
 	if err != nil {
 		log.WithError(err).Fatal("failed to initialize mcp server")
 	}
 
-	sse := server.NewSSEServer(
-		srv.MCPServer,
-		server.WithBaseURL(cli.Flags.BaseURL),
-		server.WithHTTPContextFunc(session.AddIDToContext),
-		server.WithAppendQueryToMessageEndpoint(),
-	)
-
-	log.FromContext(ctx).WithField("bind-addr", cli.Flags.BindAddr).Info("starting sse server")
-	err = sse.Start(cli.Flags.BindAddr)
-	if err != nil {
-		log.WithError(err).Fatal("failed running sse server")
+	chix.SetServerDefaults = false
+	if err = chix.RunContext(ctx, httpServer(ctx)); err != nil {
+		log.FromContext(ctx).WithError(err).Fatal("shutting down")
 	}
 }

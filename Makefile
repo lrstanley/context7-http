@@ -22,7 +22,7 @@ prepare: fetch
 	go generate -x ./...
 
 inspect:
-	@echo "server will be available at: http://localhost:8081/?transport=sse&serverUrl=http://localhost:8080/sse#tools"
+	@echo "server will be available at: http://localhost:8081/?transport=streamable-http&serverUrl=http://localhost:8080/mcp#tools"
 	@CLIENT_PORT=8081 pnpm dlx @modelcontextprotocol/inspector
 
 dlv: prepare

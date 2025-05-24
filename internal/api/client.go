@@ -13,7 +13,7 @@ import (
 
 	cache "github.com/Code-Hex/go-generics-cache"
 	"github.com/Code-Hex/go-generics-cache/policy/lfu"
-	"github.com/lrstanley/context7-http/internal/session"
+	"github.com/lrstanley/chix"
 	"github.com/sethvargo/go-limiter"
 	"github.com/sethvargo/go-limiter/memorystore"
 )
@@ -66,8 +66,8 @@ func New(ctx context.Context, httpClient *http.Client) (*Client, error) {
 }
 
 func (c *Client) checkRateLimit(ctx context.Context, namespace string) (err error) {
-	sessionID := session.GetIDFromContext(ctx)
-	_, _, reset, allowed, _ := c.limiter.Take(ctx, namespace+"/"+sessionID)
+	ip := chix.GetContextIP(ctx)
+	_, _, reset, allowed, _ := c.limiter.Take(ctx, namespace+"/"+ip.String())
 	if !allowed {
 		return fmt.Errorf("rate limit exceeded (reset in %s)", time.Until(time.Unix(0, int64(reset))))
 	}
