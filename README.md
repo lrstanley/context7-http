@@ -26,7 +26,8 @@
 **context7-http** is a MCP server that supports HTTP SSE streaming for the [Context7](https://context7.com) project.
 
 - HTTP SSE streaming for Context7.
-- (_future_) Support for `streamable` functionality once it's supported in the upstream MCP library we use.
+- (_future_) Support for HTTP `streamable` functionality once it's supported in the upstream MCP library
+  we use (or the official MCP library is released by the Go team).
 - Provides `resolve-library-uri` and `search-library-docs` tools for finding libraries, and searching their documentation.
 - Provides multiple resources, including:
   - `context7://libraries` - returns high-level information about all libraries.

@@ -35,8 +35,8 @@ func New(ctx context.Context, version string, client *api.Client) (*Server, erro
 	srv.AddTool(srv.toolResolveLibraryID())
 	srv.AddTool(srv.toolSearchLibraryDocs())
 	srv.AddResource(srv.resourceLibrariesAll())
+	srv.AddResource(srv.resourceLibrariesTop(500))
 	srv.AddResource(srv.resourceLibrariesTop(1000))
-	srv.AddResource(srv.resourceLibrariesTop(2500))
 	srv.AddResourceTemplate(srv.resourceLibrary()) // TODO: is this just for searching?
 
 	srv.baseVariables = map[string]any{
