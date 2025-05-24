@@ -1,25 +1,18 @@
 name: release
 
 on:
-  pull_request:
-    branches: [master, main]
-    paths-ignore: [".gitignore", "**/*.md", ".github/ISSUE_TEMPLATE/**"]
-    types: [opened, edited, reopened, synchronize, unlocked]
   push:
     branches: [master, main]
     tags: [v*]
     paths-ignore: [".gitignore", "**/*.md", ".github/ISSUE_TEMPLATE/**"]
 
 jobs:
-  go-test:
-    uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
-    with: { num-minor: 1, num-patch: 1 }
-  go-lint:
-    uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
-    secrets:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  go-release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    uses: lrstanley/.github/.github/workflows/lang-go-release.yml@master
+    with:
+      upload-artifacts: true
   docker-release:
-    needs: [go-test, go-lint]
     uses: lrstanley/.github/.github/workflows/docker-release.yml@master
     with:
       dockerfile: .github/Dockerfile
