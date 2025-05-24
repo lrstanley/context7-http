@@ -1,0 +1,13 @@
+*.log
+~*
+*.tmp
+*.txt
+dist
+*.test
+*.prof
+*.conf
+*.toml
+.git
+bin
+**/.env
+context7-http
