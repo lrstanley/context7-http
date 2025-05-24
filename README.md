@@ -58,6 +58,7 @@
 
   - [Features](#sparkles-features)
   - [Usage](#gear-usage)
+    - [VSCode, Cursor, etc](#vscode-cursor-etc)
   - [References](#books-references)
   - [Support &amp; Assistance](#raising_hand_man-support--assistance)
   - [Contributing](#handshake-contributing)
