@@ -34,9 +34,9 @@ var (
 )
 
 type Flags struct {
-	BindAddr          string        `long:"bind-addr"          env:"BIND_ADDR"          default:":8080"`
-	BaseURL           string        `long:"base-url"           env:"BASE_URL"           default:"http://localhost:8080"`
-	TrustedProxies    []string      `long:"trusted-proxies"    env:"TRUSTED_PROXIES"    description:"CIDR ranges that we trust the X-Forwarded-For header from"`
+	BindAddr          string        `long:"bind-addr"          env:"BIND_ADDR" default:":8080"`
+	BaseURL           string        `long:"base-url"           env:"BASE_URL" default:"http://localhost:8080"`
+	TrustedProxies    []string      `long:"trusted-proxies"    env:"TRUSTED_PROXIES" env-delim:"," description:"CIDR ranges that we trust the X-Forwarded-For header from"`
 	HeartbeatInterval time.Duration `long:"heartbeat-interval" env:"HEARTBEAT_INTERVAL"`
 }
 
