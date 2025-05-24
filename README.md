@@ -86,8 +86,8 @@ For all examples below, replace `context7.liam.sh` with your own MCP server URL,
 
 Configured endpoints:
 
-- `http://context7.liam.sh/mcp` - HTTP `streamable` endpoint.
-- `http://context7.liam.sh/sse` (& `/message`) - SSE endpoint (**NOTE**: SSE is considered deprecated in the MCP spec).
+- `https://context7.liam.sh/mcp` - HTTP `streamable` endpoint.
+- `https://context7.liam.sh/sse` (& `/message`) - SSE endpoint (**NOTE**: SSE is considered deprecated in the MCP spec).
 
 Other than swapping out the `mcpServer` block (or similar, depending on your client), usage should match that of the
 [official Context7 documentation](https://github.com/upstash/context7#-with-context7)
@@ -98,7 +98,7 @@ Other than swapping out the `mcpServer` block (or similar, depending on your cli
 {
   "mcpServers": {
     "context7": {
-      "url": "http://context7.liam.sh/mcp"
+      "url": "https://context7.liam.sh/mcp"
     }
   }
 }
