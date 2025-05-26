@@ -94,6 +94,9 @@ Other than swapping out the `mcpServer` block (or similar, depending on your cli
 
 ### VSCode, Cursor, etc
 
+[Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol#configuring-mcp-servers), and
+[VS Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
+
 ```json
 {
   "mcpServers": {
@@ -103,6 +106,60 @@ Other than swapping out the `mcpServer` block (or similar, depending on your cli
   }
 }
 ```
+
+### Install in Windsurf
+
+Add this to your Windsurf MCP config file. See [Windsurf MCP docs](https://docs.windsurf.com/windsurf/cascade/mcp#mcp-config-json) for more info.
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "url": "https://context7.liam.sh/mcp"
+    }
+  }
+}
+```
+
+### Install in Zed
+
+Add this to your Zed `settings.json`. See [Zed MCP docs](https://zed.dev/docs/ai/mcp#bring-your-own-mcp-server) for more info.
+
+```json
+{
+  "context_servers": {
+    "context7": {
+      "url": "https://context7.liam.sh/mcp"
+    }
+  }
+}
+```
+
+### Install in Claude Code
+
+Run this command. See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/claude-code/tutorials#configure-mcp-servers) for more info.
+
+```sh
+claude mcp add --transport sse context7 https://context7.liam.sh/mcp
+```
+
+### Install in Claude Desktop
+
+Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) for more info.
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "url": "https://context7.liam.sh/mcp"
+    }
+  }
+}
+```
+
+### Install in BoltAI
+
+[BoltAI MCP docs](https://docs.boltai.com/docs/plugins/mcp-servers#how-to-use-an-mcp-server-in-boltai).
 
 ## :books: References
 

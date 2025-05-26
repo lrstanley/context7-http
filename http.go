@@ -54,12 +54,10 @@ func httpServer(ctx context.Context) *http.Server {
 	r.Handle("/sse", sseServer)
 	r.Handle("/message", sseServer)
 
-	streamableOpts := []server.StreamableHTTPOption{}
-	if cli.Flags.HeartbeatInterval > 0 {
-		streamableOpts = append(streamableOpts, server.WithHeartbeatInterval(cli.Flags.HeartbeatInterval))
-	}
-
-	streamableServer := server.NewStreamableHTTPServer(srv.MCPServer, streamableOpts...)
+	streamableServer := server.NewStreamableHTTPServer(
+		srv.MCPServer,
+		server.WithHeartbeatInterval(cli.Flags.HeartbeatInterval),
+	)
 	r.Handle("/mcp", streamableServer)
 
 	if cli.Debug {
