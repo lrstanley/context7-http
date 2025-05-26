@@ -34,17 +34,16 @@ func loggingHooks(hooks *server.Hooks) *server.Hooks {
 			fields["type"] = fmt.Sprintf("%T", m)
 		}
 
-		// fmt.Printf("%#v\n", message)
 		log.FromContext(ctx).WithFields(fields).Debug("received event")
 	})
-	hooks.AddOnSuccess(func(ctx context.Context, id any, method mcp.MCPMethod, message any, result any) {
+	hooks.AddOnSuccess(func(ctx context.Context, id any, method mcp.MCPMethod, _, _ any) {
 		log.FromContext(ctx).WithFields(log.Fields{
 			"id":     id,
 			"method": method,
 			"op":     "success",
 		}).Debug("received event")
 	})
-	hooks.AddOnError(func(ctx context.Context, id any, method mcp.MCPMethod, message any, err error) {
+	hooks.AddOnError(func(ctx context.Context, id any, method mcp.MCPMethod, _ any, err error) {
 		log.FromContext(ctx).WithFields(log.Fields{
 			"id":     id,
 			"method": method,

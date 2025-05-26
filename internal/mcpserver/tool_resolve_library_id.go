@@ -29,7 +29,7 @@ func (s *Server) toolResolveLibraryID() (tool mcp.Tool, handler server.ToolHandl
 		mcp.WithDescription(s.mustRender("resolve_library_id_desc", nil)),
 	)
 
-	return tool, mcp.NewTypedToolHandler(func(ctx context.Context, request mcp.CallToolRequest, params ResolveLibraryIDParams) (*mcp.CallToolResult, error) {
+	return tool, mcp.NewTypedToolHandler(func(ctx context.Context, _ mcp.CallToolRequest, params ResolveLibraryIDParams) (*mcp.CallToolResult, error) {
 		results, err := s.client.SearchLibraries(ctx, params.LibraryName)
 		if err != nil {
 			log.FromContext(ctx).WithError(err).Error("failed to retrieve library documentation data from Context7")

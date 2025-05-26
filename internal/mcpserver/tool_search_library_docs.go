@@ -51,7 +51,7 @@ func (s *Server) toolSearchLibraryDocs() (tool mcp.Tool, handler server.ToolHand
 		mcp.WithDescription(s.mustRender("search_library_docs_desc", nil)),
 	)
 
-	return tool, mcp.NewTypedToolHandler(func(ctx context.Context, request mcp.CallToolRequest, params SearchLibraryDocsParams) (*mcp.CallToolResult, error) {
+	return tool, mcp.NewTypedToolHandler(func(ctx context.Context, _ mcp.CallToolRequest, params SearchLibraryDocsParams) (*mcp.CallToolResult, error) {
 		result, err := s.client.SearchLibraryDocsText(ctx, params.ResourceURI, &api.SearchLibraryDocsParams{
 			Topic:   params.Topic,
 			Tokens:  params.Tokens,

@@ -21,7 +21,7 @@ func (s *Server) resourceLibrariesAll() (resource mcp.Resource, handler server.R
 		mcp.WithMIMEType("application/json"),
 	)
 
-	return resource, func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
+	return resource, func(ctx context.Context, _ mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
 		libraries, err := s.client.ListLibraries(ctx)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list libraries: %w", err)
@@ -37,7 +37,7 @@ func (s *Server) resourceLibrariesTop(top int) (resource mcp.Resource, handler s
 		mcp.WithMIMEType("application/json"),
 	)
 
-	return resource, func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
+	return resource, func(ctx context.Context, _ mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
 		libraries, err := s.client.ListTopLibraries(ctx, top)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list top %d libraries: %w", top, err)

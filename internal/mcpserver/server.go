@@ -17,7 +17,7 @@ type Server struct {
 	baseVariables map[string]any
 }
 
-func New(ctx context.Context, version string, client *api.Client) (*Server, error) {
+func New(_ context.Context, version string, client *api.Client) (*Server, error) {
 	name := "Context7"
 	srv := &Server{
 		client: client,
