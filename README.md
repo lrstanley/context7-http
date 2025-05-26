@@ -88,9 +88,9 @@ This allows you to utilize the MCP server from anywhere, without installing anyt
 - Provides `resolve-library-uri` and `search-library-docs` tools for finding libraries, and searching their documentation.
 - Provides multiple resources, including:
   - `context7://libraries` - returns high-level information about all libraries.
-  - `context7://libraries/<project>`
+  - `context7://libraries/<project>` (**TODO**: not fully functional in upstream SDK)
   - `context7://libraries/top/<n>` - returns the top `n` libraries, sorted by trust score (if available), otherwise by stars.
-
+- Currently utilizing [mcp-go](https://github.com/mark3labs/mcp-go), however, will be replaced with the official Go MCP sdk in the future.
 ---
 
 ## :gear: Usage
@@ -101,8 +101,8 @@ If you'd like to run context7-http yourself, use the following:
 $ context7-http \
     --debug \
     --bind-addr "0.0.0.0:8080" \
-    --base-url https://context7.liam.sh \ # only needed if using sse, http streamable doesn't need this
-    --trusted-proxies "x-forwarded-for,10.0.0.0/8 \ # if behind a reverse proxy
+    --base-url https://context7.your-domain.com \ # only needed if using sse, http streamable doesn't need this
+    --trusted-proxies "x-forwarded-for,10.0.0.0/8" \ # if behind a reverse proxy
     --heartbeat-interval 55s # for those with spotty networks or annoying network proxies
 ```
 

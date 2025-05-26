@@ -17,8 +17,9 @@ import (
 func (s *Server) resourceLibrariesAll() (resource mcp.Resource, handler server.ResourceHandlerFunc) {
 	resource = mcp.NewResource(
 		"context7://libraries",
-		"Retrieves all known and tracked libraries.",
+		"get-libraries-all",
 		mcp.WithMIMEType("application/json"),
+		mcp.WithResourceDescription("Lists all known and tracked libraries."),
 	)
 
 	return resource, func(ctx context.Context, _ mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
@@ -33,8 +34,9 @@ func (s *Server) resourceLibrariesAll() (resource mcp.Resource, handler server.R
 func (s *Server) resourceLibrariesTop(top int) (resource mcp.Resource, handler server.ResourceHandlerFunc) {
 	resource = mcp.NewResource(
 		"context7://libraries/top/"+strconv.Itoa(top),
-		"Lists top "+strconv.Itoa(top)+" libraries, sorted by trust score (if available), otherwise by stars.",
+		"get-libraries-top-"+strconv.Itoa(top),
 		mcp.WithMIMEType("application/json"),
+		mcp.WithResourceDescription("Lists top "+strconv.Itoa(top)+" libraries, sorted by trust score (if available), otherwise by stars."),
 	)
 
 	return resource, func(ctx context.Context, _ mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {
@@ -49,7 +51,9 @@ func (s *Server) resourceLibrariesTop(top int) (resource mcp.Resource, handler s
 func (s *Server) resourceLibrary() (template mcp.ResourceTemplate, handler server.ResourceTemplateHandlerFunc) {
 	template = mcp.NewResourceTemplate(
 		"context7://libraries/{project}",
-		"Retrieves information about a specific library.",
+		"get-library-info",
+		mcp.WithTemplateMIMEType("application/json"),
+		mcp.WithTemplateDescription("Retrieves information about a specific library."),
 	)
 
 	return template, func(ctx context.Context, request mcp.ReadResourceRequest) ([]mcp.ResourceContents, error) {

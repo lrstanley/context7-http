@@ -24,7 +24,6 @@ func New(_ context.Context, version string, client *api.Client) (*Server, error)
 		MCPServer: server.NewMCPServer(
 			name,
 			version,
-			// server.WithInstructions(),
 			server.WithRecovery(),
 			server.WithToolCapabilities(false),
 			server.WithHooks(loggingHooks(nil)),
@@ -37,7 +36,8 @@ func New(_ context.Context, version string, client *api.Client) (*Server, error)
 	srv.AddResource(srv.resourceLibrariesAll())
 	srv.AddResource(srv.resourceLibrariesTop(500))
 	srv.AddResource(srv.resourceLibrariesTop(1000))
-	srv.AddResourceTemplate(srv.resourceLibrary()) // TODO: is this just for searching?
+	// Non-functional at this time.
+	// srv.AddResourceTemplate(srv.resourceLibrary())
 
 	srv.baseVariables = map[string]any{
 		"ServerName":    name,
