@@ -87,6 +87,19 @@ This allows you to utilize the MCP server from anywhere, without installing anyt
 
 ## :gear: Usage
 
+If you'd like to run context7-http yourself, use the following:
+
+```console
+$ context7-http \
+    --debug \
+    --bind-addr "0.0.0.0:8080" \
+    --base-url https://context7.liam.sh \ # only needed if using sse, http streamable doesn't need this
+    --trusted-proxies "x-forwarded-for,10.0.0.0/8 \ # if behind a reverse proxy
+    --heartbeat-interval 55s # for those with spotty networks or annoying network proxies
+```
+
+------------
+
 For all examples below, replace `context7.liam.sh` with your own MCP server URL, if you're running your own instance.
 
 Configured endpoints:
@@ -165,6 +178,10 @@ Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude D
 ### Install in BoltAI
 
 [BoltAI MCP docs](https://docs.boltai.com/docs/plugins/mcp-servers#how-to-use-an-mcp-server-in-boltai).
+
+<!-- template:begin:ghcr -->
+<!-- do not edit anything in this "template" block, its auto-generated -->
+<!-- template:end:ghcr -->
 
 ## :books: References
 
