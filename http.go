@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -68,6 +69,18 @@ func httpServer(ctx context.Context) *http.Server {
 		chix.JSON(w, r, 200, chix.M{
 			"status": "ok",
 		})
+	})
+
+	r.Get("/", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "text/html")
+		_, _ = w.Write([]byte(`<html><body style="background-color:#383838;"><h1 style="color:white;">Context7 MCP Server</h1><ul>`))
+		for _, link := range cli.Links {
+			_, _ = fmt.Fprintf(w, `<li><a style="color:white;text-transform:capitalize;" href=%q>%s</a></li>`, link.URL, link.Name)
+		}
+		_, _ = fmt.Fprintf(w, `<li><a style="color:white;" href=%q>SSE -- <code>%s/sse</code></a></li>`, cli.Flags.BaseURL+"/sse", cli.Flags.BaseURL)
+		_, _ = fmt.Fprintf(w, `<li><a style="color:white;" href=%q>MCP -- <code>%s/mcp</code></a></li>`, cli.Flags.BaseURL+"/mcp", cli.Flags.BaseURL)
+		_, _ = w.Write([]byte(`</ul></body></html>`))
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {

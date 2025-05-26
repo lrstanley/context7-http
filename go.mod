@@ -7,7 +7,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/apex/log v1.9.0
 	github.com/go-chi/chi/v5 v5.2.1
-	github.com/lrstanley/chix v1.0.6
+	github.com/lrstanley/chix v1.0.7
 	github.com/lrstanley/clix v1.0.8
 	github.com/mark3labs/mcp-go v0.29.1-0.20250524074620-e028081f7d26
 	github.com/sethvargo/go-limiter v1.0.0
