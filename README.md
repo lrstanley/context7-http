@@ -145,7 +145,7 @@ Add this to your Zed `settings.json`. See [Zed MCP docs](https://zed.dev/docs/ai
 Run this command. See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/claude-code/tutorials#configure-mcp-servers) for more info.
 
 ```sh
-claude mcp add --transport sse context7 https://context7.liam.sh/mcp
+claude mcp add --transport sse context7 https://context7.liam.sh/sse
 ```
 
 ### Install in Claude Desktop
