@@ -9,6 +9,9 @@
 <!-- do not edit anything in this "template" block, its auto-generated -->
 
 <p align="center">
+  <a href="https://github.com/lrstanley/context7-http/releases">
+    <img title="Release Downloads" src="https://img.shields.io/github/downloads/lrstanley/context7-http/total?style=flat-square">
+  </a>
   <a href="https://github.com/lrstanley/context7-http/tags">
     <img title="Latest Semver Tag" src="https://img.shields.io/github/v/tag/lrstanley/context7-http?style=flat-square">
   </a>
@@ -45,6 +48,10 @@
   <a href="https://github.com/lrstanley/context7-http/pulls">
     <img title="Open Pull Requests" src="https://img.shields.io/github/issues-pr/lrstanley/context7-http?label=prs&style=flat-square">
   </a>
+  <a href="https://github.com/lrstanley/context7-http/releases">
+    <img title="Latest Semver Release" src="https://img.shields.io/github/v/release/lrstanley/context7-http?style=flat-square">
+    <img title="Latest Release Date" src="https://img.shields.io/github/release-date/lrstanley/context7-http?label=date&style=flat-square">
+  </a>
   <a href="https://github.com/lrstanley/context7-http/discussions/new?category=q-a">
     <img title="Ask a Question" src="https://img.shields.io/badge/support-ask_a_question!-blue?style=flat-square">
   </a>
@@ -64,6 +71,7 @@
     - [Install in Claude Code](#install-in-claude-code)
     - [Install in Claude Desktop](#install-in-claude-desktop)
     - [Install in BoltAI](#install-in-boltai)
+    - [Container Images (ghcr)](#whale-container-images-ghcr)
   - [References](#books-references)
   - [Support &amp; Assistance](#raising_hand_man-support--assistance)
   - [Contributing](#handshake-contributing)
@@ -181,6 +189,13 @@ Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude D
 
 <!-- template:begin:ghcr -->
 <!-- do not edit anything in this "template" block, its auto-generated -->
+### :whale: Container Images (ghcr)
+
+```console
+$ docker run -it --rm ghcr.io/lrstanley/context7-http:0.1.0
+$ docker run -it --rm ghcr.io/lrstanley/context7-http:latest
+$ docker run -it --rm ghcr.io/lrstanley/context7-http:master
+```
 <!-- template:end:ghcr -->
 
 ## :books: References
