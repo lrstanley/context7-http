@@ -12,9 +12,9 @@ on:
 jobs:
   go-test:
     uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
+    secrets: inherit
     with:
       go-version: latest
   go-lint:
     uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
-    secrets:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    secrets: inherit
