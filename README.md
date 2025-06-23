@@ -194,9 +194,9 @@ Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude D
 ### :whale: Container Images (ghcr)
 
 ```console
+$ docker run -it --rm ghcr.io/lrstanley/context7-http:master
 $ docker run -it --rm ghcr.io/lrstanley/context7-http:0.3.0
 $ docker run -it --rm ghcr.io/lrstanley/context7-http:latest
-$ docker run -it --rm ghcr.io/lrstanley/context7-http:master
 $ docker run -it --rm ghcr.io/lrstanley/context7-http:0.2.0
 $ docker run -it --rm ghcr.io/lrstanley/context7-http:0.1.0
 ```
