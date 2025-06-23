@@ -22,6 +22,7 @@
 
 
 
+
   <a href="https://github.com/lrstanley/context7-http/actions?query=workflow%3Atest+event%3Apush">
     <img title="GitHub Workflow Status (test @ master)" src="https://img.shields.io/github/actions/workflow/status/lrstanley/context7-http/test.yml?branch=master&label=test&style=flat-square">
   </a>
@@ -193,9 +194,10 @@ Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude D
 ### :whale: Container Images (ghcr)
 
 ```console
+$ docker run -it --rm ghcr.io/lrstanley/context7-http:0.3.0
+$ docker run -it --rm ghcr.io/lrstanley/context7-http:latest
 $ docker run -it --rm ghcr.io/lrstanley/context7-http:master
 $ docker run -it --rm ghcr.io/lrstanley/context7-http:0.2.0
-$ docker run -it --rm ghcr.io/lrstanley/context7-http:latest
 $ docker run -it --rm ghcr.io/lrstanley/context7-http:0.1.0
 ```
 <!-- template:end:ghcr -->
