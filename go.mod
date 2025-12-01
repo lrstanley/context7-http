@@ -10,7 +10,7 @@ require (
 	github.com/lrstanley/chix v1.0.7
 	github.com/lrstanley/clix v1.0.9
 	github.com/mark3labs/mcp-go v0.32.0
-	github.com/sethvargo/go-limiter v1.0.0
+	github.com/sethvargo/go-limiter v1.1.0
 )
 
 require (
