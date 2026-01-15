@@ -6,9 +6,9 @@ require (
 	github.com/Code-Hex/go-generics-cache v1.5.1
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/apex/log v1.9.0
-	github.com/go-chi/chi/v5 v5.2.2
+	github.com/go-chi/chi/v5 v5.2.4
 	github.com/lrstanley/chix v1.0.7
-	github.com/lrstanley/clix v1.0.9
+	github.com/lrstanley/clix v1.0.10
 	github.com/mark3labs/mcp-go v0.32.0
 	github.com/sethvargo/go-limiter v1.0.0
 )
