@@ -7,7 +7,6 @@ package mcpserver
 import (
 	"context"
 
-	"github.com/apex/log"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
@@ -32,7 +31,7 @@ func (s *Server) toolResolveLibraryID() (tool mcp.Tool, handler server.ToolHandl
 	return tool, mcp.NewTypedToolHandler(func(ctx context.Context, _ mcp.CallToolRequest, params ResolveLibraryIDParams) (*mcp.CallToolResult, error) {
 		results, err := s.client.SearchLibraries(ctx, params.LibraryName)
 		if err != nil {
-			log.FromContext(ctx).WithError(err).Error("failed to retrieve library documentation data from Context7")
+			s.logger.ErrorContext(ctx, "failed to retrieve library documentation data from Context7", "error", err)
 			return mcp.NewToolResultError("Failed to retrieve library documentation data from Context7."), nil
 		}
 

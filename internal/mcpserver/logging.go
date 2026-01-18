@@ -7,58 +7,62 @@ package mcpserver
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
-	"github.com/apex/log"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
 
-func loggingHooks(hooks *server.Hooks) *server.Hooks {
+func loggingHooks(logger *slog.Logger, hooks *server.Hooks) *server.Hooks {
 	if hooks == nil {
 		hooks = &server.Hooks{}
 	}
 
 	hooks.AddBeforeAny(func(ctx context.Context, id any, method mcp.MCPMethod, message any) {
-		fields := log.Fields{
-			"id":     id,
-			"method": method,
-			"op":     "before-any",
-		}
+		l := logger.With(
+			slog.Any("id", id),
+			slog.String("method", string(method)),
+			slog.String("op", "before-any"),
+		)
 
 		switch m := message.(type) {
 		case *mcp.ReadResourceRequest:
-			fields["resource"] = m.Params.URI
+			l = l.With(slog.String("resource", m.Params.URI))
 		case *mcp.CallToolRequest:
-			fields["tool"] = m.Params.Name
+			l = l.With(slog.String("tool", m.Params.Name))
 		default:
-			fields["type"] = fmt.Sprintf("%T", m)
+			l = l.With(slog.String("type", fmt.Sprintf("%T", m)))
 		}
 
-		log.FromContext(ctx).WithFields(fields).Debug("received event")
+		l.DebugContext(ctx, "received event")
 	})
 	hooks.AddOnSuccess(func(ctx context.Context, id any, method mcp.MCPMethod, _, _ any) {
-		log.FromContext(ctx).WithFields(log.Fields{
-			"id":     id,
-			"method": method,
-			"op":     "success",
-		}).Debug("received event")
+		logger.DebugContext(
+			ctx, "received event",
+			slog.Any("id", id),
+			slog.String("method", string(method)),
+			slog.String("op", "success"),
+		)
 	})
 	hooks.AddOnError(func(ctx context.Context, id any, method mcp.MCPMethod, _ any, err error) {
-		log.FromContext(ctx).WithFields(log.Fields{
-			"id":     id,
-			"method": method,
-			"op":     "error",
-		}).WithError(err).Error("error occurred")
+		logger.ErrorContext(
+			ctx, "error occurred",
+			slog.Any("id", id),
+			slog.String("method", string(method)),
+			slog.String("op", "error"),
+			slog.Any("error", err),
+		)
 	})
 	hooks.AddBeforeInitialize(func(ctx context.Context, id any, message *mcp.InitializeRequest) {
-		log.FromContext(ctx).WithFields(log.Fields{
-			"id":            id,
-			"method":        message.Method,
-			"op":            "before-initialize",
-			"proto":         message.Params.ProtocolVersion,
-			"clientName":    message.Params.ClientInfo.Name,
-			"clientVersion": message.Params.ClientInfo.Version,
-		}).Debug("received event")
+		logger.DebugContext(
+			ctx, "received event",
+			slog.Any("id", id),
+			slog.String("method", message.Method),
+			slog.String("op", "before-initialize"),
+			slog.String("proto", message.Params.ProtocolVersion),
+			slog.String("clientName", message.Params.ClientInfo.Name),
+			slog.String("clientVersion", message.Params.ClientInfo.Version),
+		)
 	})
 
 	return hooks

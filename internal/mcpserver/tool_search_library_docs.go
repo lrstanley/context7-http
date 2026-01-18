@@ -8,7 +8,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/apex/log"
 	"github.com/lrstanley/context7-http/internal/api"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -58,7 +57,7 @@ func (s *Server) toolSearchLibraryDocs() (tool mcp.Tool, handler server.ToolHand
 			Folders: params.Folders,
 		})
 		if err != nil {
-			log.FromContext(ctx).WithError(err).Error("failed to retrieve library documentation text from Context7")
+			s.logger.ErrorContext(ctx, "failed to retrieve library documentation text from Context7", "error", err)
 			return mcp.NewToolResultError("Failed to retrieve library documentation text from Context7."), nil
 		}
 		return mcp.NewToolResultText(result), nil

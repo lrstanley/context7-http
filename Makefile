@@ -23,7 +23,7 @@ prepare: fetch
 
 inspect:
 	@echo "server will be available at: http://localhost:8081/?transport=streamable-http&serverUrl=http://localhost:8080/mcp#tools"
-	@CLIENT_PORT=8081 pnpm dlx @modelcontextprotocol/inspector
+	@CLIENT_PORT=8081 DANGEROUSLY_OMIT_AUTH=true pnpm dlx @modelcontextprotocol/inspector
 
 dlv: prepare
 	dlv debug \

@@ -7,13 +7,16 @@ package api
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"time"
 
 	cache "github.com/Code-Hex/go-generics-cache"
 	"github.com/Code-Hex/go-generics-cache/policy/lfu"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/x/http/utils/httpclog"
+	"github.com/lrstanley/x/http/utils/httpcretry"
 	"github.com/sethvargo/go-limiter"
 	"github.com/sethvargo/go-limiter/memorystore"
 )
@@ -25,6 +28,7 @@ const (
 
 type Client struct {
 	HTTPClient             *http.Client
+	logger                 *slog.Logger
 	limiter                limiter.Store
 	searchLibraryCache     *cache.Cache[string, []*SearchResult]
 	searchLibraryDocsCache *cache.Cache[string, string]
@@ -32,13 +36,23 @@ type Client struct {
 }
 
 // New creates a new API client, with associated rate limiting and caching.
-func New(ctx context.Context, httpClient *http.Client) (*Client, error) {
+func New(ctx context.Context, logger *slog.Logger, httpClient *http.Client) (*Client, error) {
 	if httpClient == nil {
-		httpClient = &http.Client{Timeout: 10 * time.Second}
+		level := slog.LevelInfo
+		httpClient = httpcretry.NewClient(&httpcretry.Config{
+			BaseTransport: httpclog.NewTransport(&httpclog.Config{
+				Level:         &level,
+				Logger:        logger,
+				BaseTransport: http.DefaultTransport,
+			}),
+			MaxRetries:    3,
+			RetryCallback: httpcretry.LoggerCallback(logger, slog.LevelWarn),
+		})
 	}
 
 	c := &Client{
 		HTTPClient: httpClient,
+		logger:     logger,
 		searchLibraryCache: cache.NewContext(
 			ctx,
 			cache.AsLFU[string, []*SearchResult](lfu.WithCapacity(maxLibraryCache)),
@@ -53,14 +67,14 @@ func New(ctx context.Context, httpClient *http.Client) (*Client, error) {
 		),
 	}
 
-	limiter, err := memorystore.New(&memorystore.Config{
+	limit, err := memorystore.New(&memorystore.Config{
 		Tokens:   10,
 		Interval: 60 * time.Second,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to create limiter: %w", err)
 	}
-	c.limiter = limiter
+	c.limiter = limit
 
 	return c, nil
 }
@@ -80,7 +94,7 @@ type Resource interface {
 
 // ValidateResourceURI validates a resource URI, and optionally checks that the provided
 // type matches the host portion of the URI.
-func ValidateResourceURI(uri string, optionalType string) (*url.URL, error) {
+func ValidateResourceURI(uri, optionalType string) (*url.URL, error) {
 	resource, err := url.Parse(uri)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse resource URI: %w", err)

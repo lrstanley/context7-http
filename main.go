@@ -6,11 +6,11 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 
-	"github.com/apex/log"
-	"github.com/lrstanley/chix"
-	"github.com/lrstanley/clix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/clix/v2"
 	"github.com/lrstanley/context7-http/internal/api"
 	"github.com/lrstanley/context7-http/internal/mcpserver"
 )
@@ -20,46 +20,46 @@ var (
 	commit  = "latest"
 	date    = "-"
 
-	cli = &clix.CLI[Flags]{
-		Links: clix.GithubLinks("github.com/lrstanley/context7-http", "master", "https://liam.sh"),
-		VersionInfo: &clix.VersionInfo[Flags]{
+	cli = clix.NewWithDefaults(
+		clix.WithAppInfo[Flags](clix.AppInfo{
 			Version: version,
 			Commit:  commit,
 			Date:    date,
-		},
-	}
-
-	srv    *mcpserver.Server
-	client *api.Client
+			Links:   clix.GithubLinks("github.com/lrstanley/context7-http", "master", "https://liam.sh"),
+		}),
+	)
 )
 
 type Flags struct {
-	BindAddr          string        `long:"bind-addr"          env:"BIND_ADDR" default:":8080"`
-	BaseURL           string        `long:"base-url"           env:"BASE_URL" default:"http://localhost:8080"`
-	TrustedProxies    []string      `long:"trusted-proxies"    env:"TRUSTED_PROXIES" env-delim:"," description:"CIDR ranges that we trust the X-Forwarded-For header from"`
-	HeartbeatInterval time.Duration `long:"heartbeat-interval" env:"HEARTBEAT_INTERVAL"`
+	BindAddr          string        `name:"bind-addr"          env:"BIND_ADDR" default:":8080"`
+	BaseURL           string        `name:"base-url"           env:"BASE_URL" default:"http://localhost:8080"`
+	TrustedProxies    []string      `name:"trusted-proxies"    env:"TRUSTED_PROXIES" help:"CIDR ranges that we trust the X-Forwarded-For header from"`
+	HeartbeatInterval time.Duration `name:"heartbeat-interval" env:"HEARTBEAT_INTERVAL"`
 }
 
 func main() {
-	cli.LoggerConfig.Pretty = true
-	cli.Parse()
-
+	logger := cli.GetLogger()
 	ctx := context.Background()
 
+	var client *api.Client
+	var srv *mcpserver.Server
 	var err error
 
-	client, err = api.New(ctx, nil)
+	client, err = api.New(ctx, logger, nil)
 	if err != nil {
-		log.WithError(err).Fatal("failed to initialize api client")
+		logger.ErrorContext(ctx, "failed to initialize api client", "error", err)
+		os.Exit(1)
 	}
 
-	srv, err = mcpserver.New(ctx, version, client)
+	srv, err = mcpserver.New(ctx, logger, version, client)
 	if err != nil {
-		log.WithError(err).Fatal("failed to initialize mcp server")
+		logger.ErrorContext(ctx, "failed to initialize mcp server", "error", err)
+		os.Exit(1)
 	}
 
-	chix.SetServerDefaults = false
-	if err = chix.RunContext(ctx, httpServer(ctx)); err != nil {
-		log.FromContext(ctx).WithError(err).Fatal("shutting down")
+	err = chix.NewServerWithoutDefaults(ctx, logger, httpServer(logger, srv), "", "")
+	if err != nil {
+		logger.ErrorContext(ctx, "http server invocation failed", "error", err)
+		os.Exit(1)
 	}
 }

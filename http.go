@@ -5,38 +5,38 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
-	"strings"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/context7-http/internal/mcpserver"
 	"github.com/mark3labs/mcp-go/server"
 )
 
-func httpServer(ctx context.Context) *http.Server {
-	chix.DefaultAPIPrefix = "/"
+func httpServer(logger *slog.Logger, srv *mcpserver.Server) *http.Server {
 	r := chi.NewRouter()
 
+	r.Use(
+		chix.NewConfig().
+			SetLogger(logger).
+			Use(),
+	)
+
 	if len(cli.Flags.TrustedProxies) > 0 {
-		r.Use(chix.UseRealIPCLIOpts(cli.Flags.TrustedProxies))
+		r.Use(chix.UseRealIPStringOpts(cli.Flags.TrustedProxies))
 	}
 
 	// Core middeware.
 	r.Use(
-		chix.UseDebug(cli.Debug),
-		chix.UseContextIP,
-		chix.UseStructuredLogger(log.FromContext(ctx)),
-		chix.UseRecoverer,
-		middleware.Maybe(middleware.StripSlashes, func(r *http.Request) bool {
-			return !strings.HasPrefix(r.URL.Path, "/debug/")
-		}),
+		chix.UseContextIP(),
+		chix.UseStructuredLogger(chix.DefaultLogConfig()),
+		chix.UseStripSlashes(),
 		middleware.Compress(5),
-		chix.UseSecurityTxt(&chix.SecurityConfig{
+		chix.UseSecurityText(chix.SecurityTextConfig{
 			ExpiresIn: 182 * 24 * time.Hour,
 			Contacts: []string{
 				"mailto:liam@liam.sh",
@@ -62,7 +62,7 @@ func httpServer(ctx context.Context) *http.Server {
 	r.Handle("/mcp", streamableServer)
 
 	if cli.Debug {
-		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
+		r.With(chix.UsePrivateIP()).Mount("/debug", middleware.Profiler())
 	}
 
 	r.With(middleware.ThrottleBacklog(1, 5, 5*time.Second)).Get("/healthy", func(w http.ResponseWriter, r *http.Request) {
@@ -75,7 +75,7 @@ func httpServer(ctx context.Context) *http.Server {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "text/html")
 		_, _ = w.Write([]byte(`<html><body style="background-color:#383838;"><h1 style="color:white;">Context7 MCP Server</h1><ul>`))
-		for _, link := range cli.Links {
+		for _, link := range cli.GetVersion().AppInfo.Links {
 			_, _ = fmt.Fprintf(w, `<li><a style="color:white;text-transform:capitalize;" href=%q>%s</a></li>`, link.URL, link.Name)
 		}
 		_, _ = fmt.Fprintf(w, `<li><a style="color:white;" href=%q>SSE -- <code>%s/sse</code></a></li>`, cli.Flags.BaseURL+"/sse", cli.Flags.BaseURL)
@@ -84,7 +84,7 @@ func httpServer(ctx context.Context) *http.Server {
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		chix.Error(w, r, chix.WrapCode(http.StatusNotFound))
+		chix.ErrorWithCode(w, r, http.StatusNotFound)
 	})
 
 	return &http.Server{

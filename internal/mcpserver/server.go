@@ -6,6 +6,7 @@ package mcpserver
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/lrstanley/context7-http/internal/api"
 	"github.com/mark3labs/mcp-go/server"
@@ -14,19 +15,21 @@ import (
 type Server struct {
 	*server.MCPServer
 	client        *api.Client
+	logger        *slog.Logger
 	baseVariables map[string]any
 }
 
-func New(_ context.Context, version string, client *api.Client) (*Server, error) {
+func New(_ context.Context, logger *slog.Logger, version string, client *api.Client) (*Server, error) {
 	name := "Context7"
 	srv := &Server{
 		client: client,
+		logger: logger,
 		MCPServer: server.NewMCPServer(
 			name,
 			version,
 			server.WithRecovery(),
 			server.WithToolCapabilities(false),
-			server.WithHooks(loggingHooks(nil)),
+			server.WithHooks(loggingHooks(logger, nil)),
 			server.WithPaginationLimit(250),
 		),
 	}

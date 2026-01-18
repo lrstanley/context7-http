@@ -10,9 +10,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"time"
-
-	"github.com/apex/log"
 )
 
 // request is a generic function that makes an HTTP request to the given path, with
@@ -46,38 +43,25 @@ func request[T any](
 		req.URL.RawQuery = query.Encode()
 	}
 
-	logger := log.FromContext(ctx).WithFields(log.Fields{
-		"method": req.Method,
-		"url":    req.URL.String(),
-	})
-
-	logger.Info("sending request")
-	start := time.Now()
 	resp, err := client.HTTPClient.Do(req)
 	if err != nil {
 		return result, err
 	}
 	defer resp.Body.Close() //nolint:errcheck
 
-	logger = logger.WithFields(log.Fields{
-		"status":   resp.Status,
-		"duration": time.Since(start).Round(time.Millisecond),
-	})
-
 	if resp.StatusCode >= 400 {
-		logger.Error("request failed")
 		return result, fmt.Errorf("request failed with status code %d", resp.StatusCode)
 	}
-	logger.Info("request completed")
 
 	// json decode and wrap in generics. if type of T is string, return the body as a string.
 	if _, ok := any(result).(string); ok {
-		body, err := io.ReadAll(resp.Body)
+		var body []byte
+		body, err = io.ReadAll(resp.Body)
 		if err != nil {
-			return result, err
+			return result, fmt.Errorf("failed to read response body: %w", err)
 		}
-		result = any(string(body)).(T)
-	} else if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		result = any(string(body)).(T) //nolint:errcheck
+	} else if err := json.NewDecoder(resp.Body).Decode(&result); err != nil { //nolint:govet
 		return result, err
 	}
 	return result, nil
