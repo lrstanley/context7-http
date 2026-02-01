@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.4
+# syntax = docker/dockerfile:1.21
 
 # backend
 FROM golang:latest as build
