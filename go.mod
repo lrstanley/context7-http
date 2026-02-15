@@ -5,8 +5,8 @@ go 1.25.4
 require (
 	github.com/Code-Hex/go-generics-cache v1.5.1
 	github.com/Masterminds/sprig/v3 v3.3.0
-	github.com/go-chi/chi/v5 v5.2.4
-	github.com/lrstanley/chix/v2 v2.0.0-alpha.7
+	github.com/go-chi/chi/v5 v5.2.5
+	github.com/lrstanley/chix/v2 v2.0.0-beta.0
 	github.com/lrstanley/clix/v2 v2.0.0-beta.1
 	github.com/lrstanley/x/http/utils v0.0.0-20260117234740-5feb8aa461b0
 	github.com/mark3labs/mcp-go v0.43.2
