@@ -8,7 +8,7 @@ require (
 	github.com/go-chi/chi/v5 v5.2.4
 	github.com/lrstanley/chix/v2 v2.0.0-alpha.7
 	github.com/lrstanley/clix/v2 v2.0.0-beta.1
-	github.com/lrstanley/x/http/utils v0.0.0-20260117234740-5feb8aa461b0
+	github.com/lrstanley/x/http/utils v0.0.0-20260211071134-b7dbd6471eca
 	github.com/mark3labs/mcp-go v0.43.2
 	github.com/sethvargo/go-limiter v1.1.0
 )
