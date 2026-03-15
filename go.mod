@@ -9,7 +9,7 @@ require (
 	github.com/lrstanley/chix/v2 v2.0.0-alpha.7
 	github.com/lrstanley/clix/v2 v2.0.0-beta.1
 	github.com/lrstanley/x/http/utils v0.0.0-20260117234740-5feb8aa461b0
-	github.com/mark3labs/mcp-go v0.43.2
+	github.com/mark3labs/mcp-go v0.45.0
 	github.com/sethvargo/go-limiter v1.1.0
 )
 
