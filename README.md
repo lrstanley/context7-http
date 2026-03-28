@@ -69,11 +69,6 @@
   - [Features](#sparkles-features)
   - [Usage](#gear-usage)
     - [VSCode, Cursor, etc](#vscode-cursor-etc)
-    - [Install in Windsurf](#install-in-windsurf)
-    - [Install in Zed](#install-in-zed)
-    - [Install in Claude Code](#install-in-claude-code)
-    - [Install in Claude Desktop](#install-in-claude-desktop)
-    - [Install in BoltAI](#install-in-boltai)
     - [Container Images (ghcr)](#whale-container-images-ghcr)
   - [References](#books-references)
   - [Support &amp; Assistance](#raising_hand_man-support--assistance)
@@ -86,14 +81,14 @@
 **context7-http** is a MCP server that supports HTTP streaming for the [Context7](https://context7.com) project.
 This allows you to utilize the MCP server from anywhere, without installing anything locally.
 
-- Has _current_ feature parity with the existing Context7 MCP Server.
-- SSE and HTTP `streamable` support.
+- HTTP `streamable` support.
 - Provides `resolve-library-uri` and `search-library-docs` tools for finding libraries, and searching their documentation.
-- Provides multiple resources, including:
-  - `context7://libraries` - returns high-level information about all libraries.
-  - `context7://libraries/<project>` (**TODO**: not fully functional in upstream SDK)
-  - `context7://libraries/top/<n>` - returns the top `n` libraries, sorted by trust score (if available), otherwise by stars.
-- Currently utilizing [mcp-go](https://github.com/mark3labs/mcp-go), however, will be replaced with the official Go MCP sdk in the future.
+
+> [!WARNING]
+> This server utilizes the `v1` variant of the Context7 API, which may eventually be
+> removed by the Context7 team. Note that the `v2` API requires API keys, is drastically
+> more ratelimited, and expanded use does require paying. [See here](https://context7.com/plans).
+
 ---
 
 ## :gear: Usage
@@ -116,7 +111,6 @@ For all examples below, replace `context7.liam.sh` with your own MCP server URL,
 Configured endpoints:
 
 - `https://context7.liam.sh/mcp` - HTTP `streamable` endpoint.
-- `https://context7.liam.sh/sse` (& `/message`) - SSE endpoint (**NOTE**: SSE is considered deprecated in the MCP spec).
 
 Other than swapping out the `mcpServer` block (or similar, depending on your client), usage should match that of the
 [official Context7 documentation](https://github.com/upstash/context7#-with-context7)
@@ -135,60 +129,6 @@ Other than swapping out the `mcpServer` block (or similar, depending on your cli
   }
 }
 ```
-
-### Install in Windsurf
-
-Add this to your Windsurf MCP config file. See [Windsurf MCP docs](https://docs.windsurf.com/windsurf/cascade/mcp#mcp-config-json) for more info.
-
-```json
-{
-  "mcpServers": {
-    "context7": {
-      "url": "https://context7.liam.sh/mcp"
-    }
-  }
-}
-```
-
-### Install in Zed
-
-Add this to your Zed `settings.json`. See [Zed MCP docs](https://zed.dev/docs/ai/mcp#bring-your-own-mcp-server) for more info.
-
-```json
-{
-  "context_servers": {
-    "context7": {
-      "url": "https://context7.liam.sh/mcp"
-    }
-  }
-}
-```
-
-### Install in Claude Code
-
-Run this command. See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/claude-code/tutorials#configure-mcp-servers) for more info.
-
-```sh
-claude mcp add --transport sse context7 https://context7.liam.sh/sse
-```
-
-### Install in Claude Desktop
-
-Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) for more info.
-
-```json
-{
-  "mcpServers": {
-    "context7": {
-      "url": "https://context7.liam.sh/mcp"
-    }
-  }
-}
-```
-
-### Install in BoltAI
-
-[BoltAI MCP docs](https://docs.boltai.com/docs/plugins/mcp-servers#how-to-use-an-mcp-server-in-boltai).
 
 <!-- template:begin:ghcr -->
 <!-- do not edit anything in this "template" block, its auto-generated -->

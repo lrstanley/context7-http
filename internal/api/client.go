@@ -6,19 +6,19 @@ package api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"net/url"
 	"time"
 
-	cache "github.com/Code-Hex/go-generics-cache"
-	"github.com/Code-Hex/go-generics-cache/policy/lfu"
 	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/x/http/utils/httpclog"
 	"github.com/lrstanley/x/http/utils/httpcretry"
-	"github.com/sethvargo/go-limiter"
-	"github.com/sethvargo/go-limiter/memorystore"
+	cache "github.com/lrstanley/x/sync/cache"
+	"github.com/lrstanley/x/sync/cache/policy/lfu"
+	"github.com/lrstanley/x/sync/rate"
 )
 
 const (
@@ -29,10 +29,9 @@ const (
 type Client struct {
 	HTTPClient             *http.Client
 	logger                 *slog.Logger
-	limiter                limiter.Store
+	limiter                *rate.KeyWindowLimiter
 	searchLibraryCache     *cache.Cache[string, []*SearchResult]
 	searchLibraryDocsCache *cache.Cache[string, string]
-	listLibrariesCache     *cache.Cache[string, []*Library]
 }
 
 // New creates a new API client, with associated rate limiting and caching.
@@ -53,37 +52,29 @@ func New(ctx context.Context, logger *slog.Logger, httpClient *http.Client) (*Cl
 	c := &Client{
 		HTTPClient: httpClient,
 		logger:     logger,
-		searchLibraryCache: cache.NewContext(
+		searchLibraryCache: cache.New(
 			ctx,
-			cache.AsLFU[string, []*SearchResult](lfu.WithCapacity(maxLibraryCache)),
+			cache.WithLFU[string, []*SearchResult](lfu.WithCapacity(maxLibraryCache)),
 		),
-		listLibrariesCache: cache.NewContext(
+		searchLibraryDocsCache: cache.New(
 			ctx,
-			cache.AsLFU[string, []*Library](lfu.WithCapacity(maxLibraryCache)),
-		),
-		searchLibraryDocsCache: cache.NewContext(
-			ctx,
-			cache.AsLFU[string, string](lfu.WithCapacity(maxLibraryCache)),
+			cache.WithLFU[string, string](lfu.WithCapacity(maxLibraryCache)),
 		),
 	}
 
-	limit, err := memorystore.New(&memorystore.Config{
-		Tokens:   10,
-		Interval: 60 * time.Second,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to create limiter: %w", err)
-	}
-	c.limiter = limit
+	c.limiter = rate.NewKeyWindowLimiter(10, 60*time.Second, rate.NewLocalCounter(60*time.Second))
 
 	return c, nil
 }
 
 func (c *Client) checkRateLimit(ctx context.Context, namespace string) (err error) {
 	ip := chix.GetContextIP(ctx)
-	_, _, reset, allowed, _ := c.limiter.Take(ctx, namespace+"/"+ip.String())
+	allowed, err := c.limiter.Allow(namespace + "/" + ip.String())
+	if err != nil {
+		return fmt.Errorf("rate limiter error: %w", err)
+	}
 	if !allowed {
-		return fmt.Errorf("rate limit exceeded (reset in %s)", time.Until(time.Unix(0, int64(reset))))
+		return errors.New("rate limit exceeded")
 	}
 	return nil
 }

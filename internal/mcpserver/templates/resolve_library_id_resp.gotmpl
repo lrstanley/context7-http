@@ -1,28 +1,9 @@
-Available Libraries (top matches):
-
-Each result has the following schema:
-- Resource URI: format: context7://libraries/<project>
-- Name: Library or package name
-- Description: Short summary
-- Code Snippets: Number of available code examples
-- Trust Score: Authority indicator
-
-For best results, select libraries based on name match, trust score, snippet coverage, and relevance to your use case.
-
-----------
-
-{{- $last := sub (len $.Results) 1 }}
-{{- range $i, $result := .Results }}
-- Title: {{ $result.Title }}
-- Resource URI: {{ $result.GetResourceURI }}
-- Description: {{ $result.Description }}
-{{- if gt $result.TotalSnippets 0 }}
-- Code Snippets: {{ $result.TotalSnippets }}
+Title: {{ .Title }}
+Resource URI: {{ .GetResourceURI }}
+Description: {{ .Description }}
+{{- if gt .TotalSnippets 0 }}
+Code Snippets: {{ .TotalSnippets }}
 {{- end }}
-{{- if gt $result.TrustScore 0.0 }}
-- Trust Score: {{ $result.TrustScore }}
-{{- end }}
-{{- if ne $last $i }}
-----------
-{{- end }}
+{{- if gt .TrustScore 0.0 }}
+Trust Score: {{ .TrustScore }}
 {{- end }}

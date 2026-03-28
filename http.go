@@ -14,7 +14,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/context7-http/internal/mcpserver"
-	"github.com/mark3labs/mcp-go/server"
 )
 
 func httpServer(logger *slog.Logger, srv *mcpserver.Server) *http.Server {
@@ -48,18 +47,7 @@ func httpServer(logger *slog.Logger, srv *mcpserver.Server) *http.Server {
 		}),
 	)
 
-	sseServer := server.NewSSEServer(
-		srv.MCPServer,
-		server.WithBaseURL(cli.Flags.BaseURL),
-	)
-	r.Handle("/sse", sseServer)
-	r.Handle("/message", sseServer)
-
-	streamableServer := server.NewStreamableHTTPServer(
-		srv.MCPServer,
-		server.WithHeartbeatInterval(cli.Flags.HeartbeatInterval),
-	)
-	r.Handle("/mcp", streamableServer)
+	r.Handle("/mcp", srv.Handler())
 
 	if cli.Debug {
 		r.With(chix.UsePrivateIP()).Mount("/debug", middleware.Profiler())

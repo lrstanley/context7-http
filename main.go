@@ -51,7 +51,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	srv, err = mcpserver.New(ctx, logger, version, client)
+	srv, err = mcpserver.New(ctx, logger, version, cli.Flags.HeartbeatInterval, client)
 	if err != nil {
 		logger.ErrorContext(ctx, "failed to initialize mcp server", "error", err)
 		os.Exit(1)

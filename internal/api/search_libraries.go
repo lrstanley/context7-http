@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	cache "github.com/Code-Hex/go-generics-cache"
+	cache "github.com/lrstanley/x/sync/cache"
 )
 
 const DefaultMinimumDocTokens = 10000

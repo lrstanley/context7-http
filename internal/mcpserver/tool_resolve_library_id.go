@@ -7,40 +7,47 @@ package mcpserver
 import (
 	"context"
 
-	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/mark3labs/mcp-go/server"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-type ResolveLibraryIDParams struct {
-	LibraryName string `json:"libraryName"`
+type resolveLibraryIDInput struct {
+	LibraryName string `json:"libraryName" jsonschema:"Library name to search for, returning a context7-compatible library resource URI."`
 }
 
-func (s *Server) toolResolveLibraryID() (tool mcp.Tool, handler server.ToolHandlerFunc) {
-	tool = mcp.NewTool(
-		"resolve-library-uri",
-		mcp.WithString(
-			"libraryName",
-			mcp.Required(),
-			mcp.MinLength(2),
-			mcp.MaxLength(100),
-			mcp.Description("Library name to search for, returning a context7-compatible library resource URI."),
-		),
-		mcp.WithDescription(s.mustRender("resolve_library_id_desc", nil)),
-	)
+func (s *Server) toolResolveLibraryID() *Tool[resolveLibraryIDInput, any] {
+	return &Tool[resolveLibraryIDInput, any]{
+		Tool: &mcp.Tool{
+			Name:        "resolve-library-uri",
+			Description: s.mustRender("resolve_library_id_desc", nil),
+			Annotations: &mcp.ToolAnnotations{
+				ReadOnlyHint:    true,
+				IdempotentHint:  false,
+				DestructiveHint: new(false),
+				OpenWorldHint:   new(false),
+			},
+		},
+		Handler: func(ctx context.Context, _ *mcp.CallToolRequest, input resolveLibraryIDInput) (*mcp.CallToolResult, any, error) {
+			results, err := s.client.SearchLibraries(ctx, input.LibraryName)
+			if err != nil {
+				s.logger.ErrorContext(ctx, "failed to retrieve library documentation data from Context7", "error", err)
+				return nil, "Failed to retrieve library documentation data from Context7.", nil
+			}
 
-	return tool, mcp.NewTypedToolHandler(func(ctx context.Context, _ mcp.CallToolRequest, params ResolveLibraryIDParams) (*mcp.CallToolResult, error) {
-		results, err := s.client.SearchLibraries(ctx, params.LibraryName)
-		if err != nil {
-			s.logger.ErrorContext(ctx, "failed to retrieve library documentation data from Context7", "error", err)
-			return mcp.NewToolResultError("Failed to retrieve library documentation data from Context7."), nil
-		}
+			if len(results) == 0 {
+				return nil, "No documentation libraries available matching that criteria.", nil
+			}
 
-		if len(results) == 0 {
-			return mcp.NewToolResultError("No documentation libraries available matching that criteria."), nil
-		}
-		resp, err := s.render("resolve_library_id_resp", map[string]any{
-			"Results": results,
-		})
-		return mcp.NewToolResultText(resp), err
-	})
+			content := make([]mcp.Content, 0, len(results))
+			var text string
+
+			for _, result := range results {
+				text, err = s.render("resolve_library_id_resp", result)
+				if err != nil {
+					return nil, "", err
+				}
+				content = append(content, &mcp.TextContent{Text: text})
+			}
+			return &mcp.CallToolResult{Content: content}, nil, nil
+		},
+	}
 }

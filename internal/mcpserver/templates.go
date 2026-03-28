@@ -9,8 +9,6 @@ import (
 	"maps"
 	"strings"
 	"text/template"
-
-	"github.com/Masterminds/sprig/v3"
 )
 
 var (
@@ -19,22 +17,29 @@ var (
 
 	templates = template.Must(
 		template.New("base").
-			Funcs(sprig.FuncMap()).
+			Funcs(template.FuncMap{
+				"sub": func(a, b int) int {
+					return a - b
+				},
+			}).
 			ParseFS(templateDir, "templates/*.gotmpl"),
 	)
 )
 
-func (s *Server) render(name string, data map[string]any) (string, error) {
+func (s *Server) render(name string, data any) (string, error) {
 	var out strings.Builder
 
-	merged := maps.Clone(s.baseVariables)
-	maps.Copy(merged, data)
+	if m, ok := data.(map[string]any); ok {
+		merged := maps.Clone(s.baseVariables)
+		maps.Copy(merged, m)
+		data = merged
+	}
 
-	err := templates.ExecuteTemplate(&out, name+".gotmpl", merged)
+	err := templates.ExecuteTemplate(&out, name+".gotmpl", data)
 	if err != nil {
 		return "", err
 	}
-	return out.String(), nil
+	return strings.TrimSpace(out.String()), nil
 }
 
 func (s *Server) mustRender(name string, data map[string]any) string {
