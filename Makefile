@@ -10,7 +10,6 @@ clean:
 	/bin/rm -rfv ${PROJECT}
 
 fetch:
-	go mod download
 	go mod tidy
 
 up:
