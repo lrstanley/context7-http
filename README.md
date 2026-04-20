@@ -22,7 +22,6 @@
 
 
 
-
   <a href="https://github.com/lrstanley/context7-http/actions?query=workflow%3Atest+event%3Apush">
     <img title="GitHub Workflow Status (test @ master)" src="https://img.shields.io/github/actions/workflow/status/lrstanley/context7-http/test.yml?branch=master&label=test&style=flat-square">
   </a>
