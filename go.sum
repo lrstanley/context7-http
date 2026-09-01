@@ -36,8 +36,8 @@ github.com/lrstanley/chix/v2 v2.0.0-beta.1 h1:x0+M9y6XSE6WP21PRArPX5EXXCgdm53xEj
 github.com/lrstanley/chix/v2 v2.0.0-beta.1/go.mod h1:D5dTTdXbUrtn1v4lj58t0F7+KV2eXV5/WQUSQSvJTq8=
 github.com/lrstanley/clix/v2 v2.0.0 h1:By5ypCwwWwKjUdUGGs4nI+W1Oqt4Bz+aGDaqM7tryzQ=
 github.com/lrstanley/clix/v2 v2.0.0/go.mod h1:QC/Dx4iZ0r3mlJk5S+7Bb6DmEem03ZRwMCy0h/DJFG0=
-github.com/lrstanley/x/http/utils v0.0.0-20260331013828-98de5249208d h1:PE9P/PpyglydagE9BVLIae/K69rK/X5p1kJuyLwJl0c=
-github.com/lrstanley/x/http/utils v0.0.0-20260331013828-98de5249208d/go.mod h1:T3UILz/S9XX/KdxoRlKAn+oSQywgNrEs+OmEfwwza3Y=
+github.com/lrstanley/x/http/utils v0.0.0-20260825190559-0b57a39177d1 h1:rcplE+zwgrlwwE2K/P9iDfeqk6uX6+FMGg4GB3gZuzk=
+github.com/lrstanley/x/http/utils v0.0.0-20260825190559-0b57a39177d1/go.mod h1:mi11moxnnIad1Gb4Ovj2xM4o0OhXscNMClj/Fp1F5RA=
 github.com/lrstanley/x/sync v0.0.0-20260331013828-98de5249208d h1:fkPnXoczGHLzYQu8aMVwa9TW5fe0+uzBZwFvOh+b2tM=
 github.com/lrstanley/x/sync v0.0.0-20260331013828-98de5249208d/go.mod h1:q71F0fHcGckHKcLWPLgD/monxNSFE+2bRJcMAiq7fGM=
 github.com/modelcontextprotocol/go-sdk v1.4.1 h1:M4x9GyIPj+HoIlHNGpK2hq5o3BFhC+78PkEaldQRphc=
