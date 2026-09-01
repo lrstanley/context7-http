@@ -3,7 +3,7 @@ module github.com/lrstanley/context7-http
 go 1.26.0
 
 require (
-	github.com/go-chi/chi/v5 v5.2.5
+	github.com/go-chi/chi/v5 v5.3.2
 	github.com/lrstanley/chix/v2 v2.0.0-beta.1
 	github.com/lrstanley/clix/v2 v2.0.0
 	github.com/lrstanley/x/http/utils v0.0.0-20260331013828-98de5249208d
