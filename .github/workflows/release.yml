@@ -15,8 +15,7 @@ jobs:
       upload-artifacts: true
   docker-release:
     uses: lrstanley/.github/.github/workflows/docker-release.yml@master
-    secrets:
-      railway-token: ${{ secrets.RAILWAY_API_TOKEN }}
+    secrets: inherit
     with:
       dockerfile: .github/Dockerfile
       # Railway runs :latest; redeploy it whenever a release pushes that tag.
