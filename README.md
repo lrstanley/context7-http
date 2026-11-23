@@ -93,10 +93,12 @@ If you'd like to run context7-http yourself, use the following:
 $ context7-http \
     --debug \
     --bind-addr "0.0.0.0:8080" \
-    --base-url https://context7.your-domain.com \ # only needed if using sse, http streamable doesn't need this
-    --trusted-proxies "x-forwarded-for,10.0.0.0/8" \ # if behind a reverse proxy
-    --heartbeat-interval 55s # for those with spotty networks or annoying network proxies
+    --base-url https://context7.your-domain.com \
+    --trusted-proxies "x-forwarded-for,10.0.0.0/8"
 ```
+
+- `--base-url` is only used for links on the index page.
+- `--trusted-proxies` is only needed if running behind a reverse proxy.
 
 ------------
 
@@ -104,7 +106,8 @@ For all examples below, replace `context7.liam.sh` with your own MCP server URL,
 
 Configured endpoints:
 
-- `https://context7.liam.sh/mcp` - HTTP `streamable` endpoint.
+- `https://context7.liam.sh/mcp` - HTTP `streamable` endpoint (stateless, supports MCP protocol versions
+  `2025-03-26` through `2026-07-28`).
 
 Other than swapping out the `mcpServer` block (or similar, depending on your client), usage should match that of the
 [official Context7 documentation](https://github.com/upstash/context7#-with-context7)

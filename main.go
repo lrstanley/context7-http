@@ -7,7 +7,6 @@ package main
 import (
 	"context"
 	"os"
-	"time"
 
 	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/clix/v2"
@@ -31,10 +30,9 @@ var (
 )
 
 type Flags struct {
-	BindAddr          string        `name:"bind-addr"          env:"BIND_ADDR" default:":8080"`
-	BaseURL           string        `name:"base-url"           env:"BASE_URL" default:"http://localhost:8080"`
-	TrustedProxies    []string      `name:"trusted-proxies"    env:"TRUSTED_PROXIES" help:"CIDR ranges that we trust the X-Forwarded-For header from"`
-	HeartbeatInterval time.Duration `name:"heartbeat-interval" env:"HEARTBEAT_INTERVAL"`
+	BindAddr       string   `name:"bind-addr"       env:"BIND_ADDR" default:":8080"`
+	BaseURL        string   `name:"base-url"        env:"BASE_URL" default:"http://localhost:8080"`
+	TrustedProxies []string `name:"trusted-proxies" env:"TRUSTED_PROXIES" help:"CIDR ranges that we trust the X-Forwarded-For header from"`
 }
 
 func main() {
@@ -51,7 +49,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	srv, err = mcpserver.New(ctx, logger, version, cli.Flags.HeartbeatInterval, client)
+	srv, err = mcpserver.New(ctx, logger, version, client)
 	if err != nil {
 		logger.ErrorContext(ctx, "failed to initialize mcp server", "error", err)
 		os.Exit(1)

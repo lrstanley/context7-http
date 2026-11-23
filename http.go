@@ -66,7 +66,6 @@ func httpServer(logger *slog.Logger, srv *mcpserver.Server) *http.Server {
 		for _, link := range cli.GetVersion().AppInfo.Links {
 			_, _ = fmt.Fprintf(w, `<li><a style="color:white;text-transform:capitalize;" href=%q>%s</a></li>`, link.URL, link.Name)
 		}
-		_, _ = fmt.Fprintf(w, `<li><a style="color:white;" href=%q>SSE -- <code>%s/sse</code></a></li>`, cli.Flags.BaseURL+"/sse", cli.Flags.BaseURL)
 		_, _ = fmt.Fprintf(w, `<li><a style="color:white;" href=%q>MCP -- <code>%s/mcp</code></a></li>`, cli.Flags.BaseURL+"/mcp", cli.Flags.BaseURL)
 		_, _ = w.Write([]byte(`</ul></body></html>`))
 	})

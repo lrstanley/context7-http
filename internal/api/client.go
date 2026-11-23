@@ -26,6 +26,16 @@ const (
 	maxLibraryCache = 100
 )
 
+var (
+	// ErrRateLimited is returned when the caller has exceeded the per-IP request
+	// rate limit.
+	ErrRateLimited = errors.New("rate limit exceeded, try again later")
+
+	// ErrInvalidResourceURI is returned when a provided resource URI is malformed
+	// or of the wrong type.
+	ErrInvalidResourceURI = errors.New("invalid resource URI")
+)
+
 type Client struct {
 	HTTPClient             *http.Client
 	logger                 *slog.Logger
@@ -74,7 +84,7 @@ func (c *Client) checkRateLimit(ctx context.Context, namespace string) (err erro
 		return fmt.Errorf("rate limiter error: %w", err)
 	}
 	if !allowed {
-		return errors.New("rate limit exceeded")
+		return ErrRateLimited
 	}
 	return nil
 }
@@ -88,14 +98,14 @@ type Resource interface {
 func ValidateResourceURI(uri, optionalType string) (*url.URL, error) {
 	resource, err := url.Parse(uri)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse resource URI: %w", err)
+		return nil, fmt.Errorf("%w: failed to parse: %w", ErrInvalidResourceURI, err)
 	}
 	if resource.Scheme != "context7" {
-		return nil, fmt.Errorf("invalid resource URI scheme: %s", resource.Scheme)
+		return nil, fmt.Errorf("%w: unsupported scheme %q", ErrInvalidResourceURI, resource.Scheme)
 	}
 	if optionalType != "" {
 		if resource.Host != optionalType {
-			return nil, fmt.Errorf("invalid resource URI type: %s", resource.Host)
+			return nil, fmt.Errorf("%w: unsupported type %q", ErrInvalidResourceURI, resource.Host)
 		}
 	}
 	return resource, nil

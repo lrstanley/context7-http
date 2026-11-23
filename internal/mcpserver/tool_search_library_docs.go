@@ -22,7 +22,8 @@ type searchLibraryDocsInput struct {
 func (s *Server) toolSearchLibraryDocs() *Tool[searchLibraryDocsInput, any] {
 	return &Tool[searchLibraryDocsInput, any]{
 		Tool: &mcp.Tool{
-			Name: "search-library-docs",
+			Name:  "search-library-docs",
+			Title: "Search Library Docs",
 			Description: fmt.Sprintf(
 				"%s Default token limit: %d.",
 				s.mustRender("search_library_docs_desc", nil),
@@ -42,8 +43,7 @@ func (s *Server) toolSearchLibraryDocs() *Tool[searchLibraryDocsInput, any] {
 				Folders: input.Folders,
 			})
 			if err != nil {
-				s.logger.ErrorContext(ctx, "failed to retrieve library documentation text from Context7", "error", err)
-				return nil, "Failed to retrieve library documentation text from Context7.", nil
+				return nil, nil, s.toolError(ctx, "failed to retrieve library documentation text from Context7", err)
 			}
 			return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: result}}}, nil, nil
 		},
